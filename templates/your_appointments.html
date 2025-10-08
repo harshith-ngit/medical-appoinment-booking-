@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Appointments</title>
+
+  <link rel="shortcut icon" href="{% static 'img/medical-icon.png' %}" type="image/x-icon" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+
+  <style>
+    .appointments__grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .appointment__card {
+      width: 470px;
+      background-color: var(--container-color);
+      border-radius: 1rem;
+      box-shadow: var(--box-shadow);
+      padding: 1.5rem;
+      transition: transform 0.2s;
+    }
+
+    .appointment__card:hover {
+      transform: translateY(-4px);
+    }
+
+    .appointment__card h3 {
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    .appointment__card p {
+      margin: 0.3rem 0;
+      font-size: 0.95rem;
+    }
+
+    .appointment__card a.button {
+      margin-top: 1rem;
+      display: inline-block;
+      font-size: 0.9rem;
+    }
+
+    .section__subtitle {
+      text-align: center;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-top: 3rem;
+      color: var(--title-color);
+    }
+
+    .no-appointments {
+      text-align: center;
+      font-size: 1.1rem;
+      margin-top: 2rem;
+    }
+
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: var(--first-color-light);
+      padding: 0.75rem 1.5rem;
+      text-align: center;
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .bottom-bar a {
+      font-weight: 600;
+      color: var(--title-color);
+    }
+  </style>
+</head>
+
+<body>
+  <!--=============== HEADER ===============-->
+  <header class="header" id="header">
+    <nav class="nav container">
+      <a href="{% url 'patient_dashboard' %}" class="nav__logo">
+        <i class="ri-arrow-left-line"></i> 🏠 Back to Dashboard
+      </a>
+
+      <div class="nav__menu" id="nav-menu">
+        <div class="nav__close" id="nav-close">
+          <i class="ri-close-line"></i>
+        </div>
+      </div>
+
+      <div class="nav__btns">
+        <i class="ri-moon-line change-theme" id="theme-button"></i>
+        <div class="nav__toggle" id="nav-toggle">
+          <i class="ri-menu-line"></i>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!--=============== MAIN ===============-->
+  <main class="section container">
+    <h2 class="section__title-center">🗓️ Your Appointments</h2>
+
+    {% if upcoming_appointments %}
+      <h3 class="section__subtitle">🔜 Upcoming Appointments</h3>
+      <div class="appointments__grid">
+        {% for app in upcoming_appointments %}
+          <div class="appointment__card">
+            <h3>{{ app.full_name }}</h3>
+            <p><strong>👩‍⚕️ Department:</strong> {{ app.department }}</p>
+            <p><strong>📅 Date:</strong> {{ app.date }}</p>
+            <p><strong>⏰ Time:</strong> {{ app.time }}</p>
+            <p><strong>📧 Email:</strong> {{ app.email }}</p>
+            <p><strong>📞 Contact:</strong> {{ app.contact }}</p>
+            <p><strong>💬 Symptoms:</strong> {{ app.symptoms }}</p>
+            <a href="{% url 'appointment_letter' appointment_id=app.id %}" class="button button--flex">
+              📄 View Appointment Letter
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="no-appointments">No upcoming appointments.</p>
+    {% endif %}
+
+    {% if completed_appointments %}
+      <h3 class="section__subtitle">✅ Past Appointments</h3>
+      <div class="appointments__grid">
+        {% for app in completed_appointments %}
+          <div class="appointment__card">
+            <h3>{{ app.full_name }}</h3>
+            <p><strong>👩‍⚕️ Department:</strong> {{ app.department }}</p>
+            <p><strong>📅 Date:</strong> {{ app.date }}</p>
+            <p><strong>⏰ Time:</strong> {{ app.time }}</p>
+            <p><strong>📧 Email:</strong> {{ app.email }}</p>
+            <p><strong>📞 Contact:</strong> {{ app.contact }}</p>
+            <p><strong>💬 Symptoms:</strong> {{ app.symptoms }}</p>
+            <a href="{% url 'appointment_letter' appointment_id=app.id %}" class="button button--flex">
+              📄 Download Letter
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="no-appointments">No Past appointments.</p>
+    {% endif %}
+  </main>
+<!-- 
+  <div class="bottom-bar">
+    <a href="{% url 'patient_dashboard' %}">🏠 Go to Dashboard</a>
+  </div> -->
+
+  <script src="https://unpkg.com/scrollreveal"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

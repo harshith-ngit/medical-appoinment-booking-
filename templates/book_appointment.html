@@ -1,0 +1,332 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book Appointment</title>
+  <link rel="shortcut icon" href="{% static 'img/medical-icon.png' %}" type="image/x-icon" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" >
+  
+
+  <style>
+    /* --- Your existing styles --- */
+    .day-card {
+      padding: 1rem;
+      border-radius: 1rem;
+      background-color: var(--container-color);
+      text-align: center;
+      transition: 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .day-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    .day-full {
+      background-color: #e6f7ec;
+      color: #999e9b;
+      border-color: #a7b7ad;
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .day-free {
+      background-color: #e6f4ea;
+      color: #0f5132;
+      border-color: #63c087;
+      cursor: pointer;
+    }
+
+    .day-closed {
+      background-color: #f1f5f2;
+      color: #9ca3af;
+      border-color: #d1d5db;
+      pointer-events: none;
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .day-selected {
+      border-color: #1e7d44;
+      box-shadow: 0 0 0 2px #3ebd6a66;
+    }
+
+    .time-slot {
+      padding: 0.5rem 1rem;
+      margin: 0.4rem;
+      border-radius: 0.75rem;
+      background-color: #1e7d44;
+      color: #fff;
+      border: 2px solid #1e7d44;
+      cursor: pointer;
+      transition: 0.3s ease;
+      font-weight: 500;
+      text-align: center;
+      display: inline-block;
+      min-width: 90px;
+    }
+
+    .time-slot:hover:not(:disabled) {
+      background-color: #1c6b3e;
+      border-color: #1c6b3e;
+    }
+
+    .time-slot.selected {
+      background-color: #155933;
+      border-color: #155933;
+    }
+
+    .time-slot:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+      background-color: #a7b7ad;
+      border-color: #8ca28a;
+      color: #d3d3d3;
+    }
+
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .time-slot-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .section__title-center {
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    /* Placeholder styling for inputs */
+    .contact__input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1.5px solid #ccc;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .contact__input:focus {
+      border-color: #1e7d44;
+    }
+
+    .contact__input::placeholder {
+      color: #999;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    .contact__input:not(:placeholder-shown) {
+      /* If there's text, reduce placeholder opacity */
+      opacity: 1;
+    }
+
+    .contact__label {
+      display: block;
+      margin-top: 0.25rem;
+      font-size: 0.85rem;
+      color: #555;
+    }
+
+    .contact__content {
+      margin-bottom: 1rem;
+    }
+
+    .button {
+      background-color: #1e7d44;
+      border: none;
+      color: white;
+      padding: 1rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+    }
+
+    .button:hover {
+      background-color: #155933;
+    }
+
+    p.error-message {
+      color: red;
+      text-align: center;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+<header class="header" id="header">
+  <nav class="nav container">
+    <a href="{% url  'patient_dashboard' %}" class="nav__logo"><i class="ri-hospital-line nav__logo-icon"></i> MediCare</a>
+    <div class="nav__btns">
+      <i class="ri-moon-line change-theme" id="theme-button"></i>
+      <div class="nav__toggle" id="nav-toggle"><i class="ri-menu-line"></i></div>
+    </div>
+  </nav>
+</header>
+
+<main class="section container">
+  <h2 class="section__title-center">Book Appointment</h2>
+
+  {% if error %}
+    <p class="error-message">{{ error }}</p>
+  {% endif %}
+
+  <!-- Step 1: Select Day -->
+  <form method="POST" action="{% url 'book_appointment' %}">
+    {% csrf_token %}
+    <h3 class="section__title-center">Select Day</h3>
+    <div class="schedule-grid">
+      {% for day in days %}
+        <button
+          type="submit"
+          name="selected_date"
+          value="{{ day.date }}"
+          class="day-card day-{{ day.status }} {% if selected_day == day.date %}day-selected{% endif %}"
+          {% if day.status != 'free' %}disabled{% endif %}
+          style="font-size: 15px;"
+        >
+          <strong>{{ day.day }}</strong><br>{{ day.date }}<br><small>{{ day.status|capfirst }}</small>
+        </button>
+      {% endfor %}
+    </div>
+  </form>
+
+  {% if selected_day %}
+    <!-- Step 2: Select Time -->
+    <form method="POST" action="{% url 'book_appointment' %}" style="margin-top: 2rem;">
+      {% csrf_token %}
+      <input type="hidden" name="selected_date" value="{{ selected_day }}">
+      <h3 class="section__title-center">Select Time Slot</h3>
+      <div class="time-slot-grid">
+        {% for slot in slots %}
+          <button
+            type="submit"
+            name="selected_time"
+            value="{{ slot }}"
+            class="time-slot {% if selected_time == slot %}selected{% endif %}"
+            {% if slot in booked_slots %}disabled{% endif %}
+          >
+            {{ slot }}
+          </button>
+        {% endfor %}
+      </div>
+    </form>
+  {% endif %}
+
+  {% if selected_day and selected_time %}
+    <!-- Step 3: Confirm Appointment -->
+    <form method="POST" action="{% url 'book_appointment' %}" style="margin-top: 2rem; max-width: 500px; margin-left: auto; margin-right: auto;">
+      {% csrf_token %}
+      <input type="hidden" name="selected_date" value="{{ selected_day }}">
+      <input type="hidden" name="selected_time" value="{{ selected_time }}">
+      <input type="hidden" name="confirm" value="yes">
+
+      <div class="contact__content">
+        <input
+          type="text"
+          name="full_name"
+          class="contact__input"
+          placeholder="Full Name"
+          required
+          value="{{ form_data.full_name|default_if_none:'' }}"
+        />
+        <!-- <label class="contact__label">Full Name</label> -->
+      </div>
+
+      <div class="contact__content">
+        <input
+          type="text"
+          name="contact"
+          class="contact__input"
+          placeholder="Contact"
+          maxlength="10"
+          required
+          value="{{ form_data.contact|default_if_none:'' }}"
+        />
+        <!-- <label class="contact__label">Contact</label> -->
+      </div>
+
+      <div class="contact__content">
+        <input
+          type="email"
+          name="email"
+          class="contact__input"
+          placeholder="Email"
+          required
+          value="{{ form_data.email|default_if_none:'' }}"
+        />
+        <!-- <label class="contact__label">Email</label> -->
+      </div>
+
+      <div class="contact__content">
+        <select name="department" class="contact__input" required>
+          <option value="" disabled {% if not form_data.department %}selected{% endif %}>Select Department</option>
+          <option value="General" {% if form_data.department == "General" %}selected{% endif %}>General</option>
+          <option value="Cardiology" {% if form_data.department == "Cardiology" %}selected{% endif %}>Cardiology</option>
+          <option value="Neurology" {% if form_data.department == "Neurology" %}selected{% endif %}>Neurology</option>
+          <option value="Orthopedics" {% if form_data.department == "Orthopedics" %}selected{% endif %}>Orthopedics</option>
+          <option value="Pediatrics" {% if form_data.department == "Pediatrics" %}selected{% endif %}>Pediatrics</option>
+        </select>
+        <!-- <label class="contact__label">Department</label> -->
+      </div>
+
+      
+  <label for="symptoms">Symptoms (max 200 characters):</label>
+  <div class="contact__content">
+<textarea
+class="contact__input"
+  id="symptoms"
+  name="symptoms"
+  maxlength="200"
+  cols="60"
+  rows="4"
+  style="
+    width: 100%;
+    max-width: 600px;
+    height: 110px;
+    resize: none;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 0.75rem;
+    font-family: inherit;
+  "
+  placeholder="Describe your symptoms briefly...">
+
+  {{ form_data.symptoms|default_if_none:'' }}</textarea>
+</div>
+
+    <div style="text-align: center; margin-top: 100px;">
+  <p style="color: #d32f2f; font-weight: 600;">
+    ⚠️ Please note: Once your appointment is confirmed, it cannot be changed or cancelled. Kindly review your details before proceeding.
+  </p>
+
+
+      <button type="submit" class="button" style="margin-top: 10px;">Confirm Appointment</button>
+    </form>
+  {% endif %}
+</main>
+
+ <script src="https://unpkg.com/scrollreveal"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

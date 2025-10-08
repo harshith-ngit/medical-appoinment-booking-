@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Patient Signup</title>
+
+  <link rel="shortcut icon" href="{% static 'img/medical-icon.png' %}" type="image/x-icon" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+  <style>
+    #message-container {
+      transition: opacity 1s ease-in-out;
+    }
+
+    #message-container.hidden {
+      opacity: 0;
+    }
+
+  </style>
+</head>
+<body>
+  <!--=============== HEADER ===============-->
+  <header class="header" id="header">
+    <nav class="nav container">
+      <a href="{% url  'home' %}" class="nav__logo">
+        <i class="ri-hospital-line nav__logo-icon"></i> MediCare
+      </a>
+
+      <div class="nav__menu" id="nav-menu">
+        <div class="nav__close" id="nav-close">
+          <i class="ri-close-line"></i>
+        </div>
+      </div>
+
+      <div class="nav__btns">
+        <i class="ri-moon-line change-theme" id="theme-button"></i>
+        <div class="nav__toggle" id="nav-toggle">
+          <i class="ri-menu-line"></i>
+        </div>
+      </div>
+    </nav>
+  </header>
+  
+   
+
+
+
+
+  <!--=============== SIGNUP SECTION ===============-->
+  <main class="section container">
+    <h2 class="section__title-center">Patient Signup</h2>
+
+         <!-- ==== MESSAGES ==== -->
+    {% if messages %}
+      <div id="message-container" style="text-align:center; margin-top: 1rem;">
+        {% for message in messages %}
+          <p class="message-text" style="color: red;">{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+    <form action="patient_signup" method="POST" class="grid" style="row-gap: 1.5rem; max-width: 400px; margin: auto;">
+      {% csrf_token %}
+      <!-- Username -->
+      <div class="contact__content">
+        <input type="text" name="username" class="contact__input" placeholder=" " required>
+        <label class="contact__label">Username</label>
+      </div>
+
+      <!-- Name -->
+      <div class="contact__content">
+        <input type="text" name="full_name" class="contact__input" placeholder=" " required>
+        <label class="contact__label">Full Name</label>
+      </div>
+
+      <!-- Contact (+91 format) -->
+      <div class="contact__content">
+        <input type="tel" name="contact" class="contact__input" placeholder=" " required
+               pattern="\[0-9]{10}" value="">
+        <label class="contact__label">Contact Number (+91)</label>
+      </div>
+
+      <!-- Email -->
+      <div class="contact__content">
+        <input type="email" name="email" class="contact__input" placeholder=" " required>
+        <label class="contact__label">Email</label>
+      </div>
+
+      <!-- Age -->
+      <div class="contact__content">
+        <input type="number" name="age" class="contact__input" placeholder=" " min="1" max="90" required>
+        <label class="contact__label">Age</label>
+      </div>
+
+      <!-- Password -->
+      <div class="contact__content">
+        <input type="password" name="password" class="contact__input" placeholder=" " required>
+        <label class="contact__label">Password</label>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="contact__content">
+        <input type="password" name="confirm_password" class="contact__input" placeholder=" " required>
+        <label class="contact__label">Confirm Password</label>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="button" style="width: 100%;">Signup</button>
+    </form>
+  </main>
+
+  <!--=============== SCROLL UP ===============-->
+  <a href="#" class="scrollup" id="scroll-up">
+    <i class="ri-arrow-up-line scrollup__icon"></i>
+  </a>
+
+  <!--=============== JS ===============-->
+  <script src="https://unpkg.com/scrollreveal"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+  <script>
+  setTimeout(function () {
+    const messageContainer = document.getElementById('message-container');
+    if (messageContainer) {
+      messageContainer.classList.add('hidden');
+      setTimeout(() => {
+        messageContainer.style.display = 'none';
+      }, 1000); // wait for fade to finish
+    }
+  }, 4000);
+</script>
+
+</body>
+</html>

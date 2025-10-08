@@ -1,0 +1,236 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <link rel="shortcut icon" href="{% static 'img/medical-icon.png' %}" type="image/x-icon" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    
+    <title>MediCare - Appointment Booking</title>
+</head>
+<body>
+    <!--==================== HEADER ====================-->
+    <header class="header" id="header">
+        <nav class="nav container">
+            <a href="#" class="nav__logo">
+                <i class="ri-stethoscope-line nav__logo-icon"></i> MediCare
+            </a>
+
+            <div class="nav__menu" id="nav-menu">
+                <ul class="nav__list">
+                    <li class="nav__item"><a href="{% url 'home' %}" class="nav__link active-link">Home</a></li>
+                    <!-- <li class="nav__item"><a class="nav__link">About</a></li> -->
+                    <li class="nav__item"><a href="{% url 'patient_login' %}" class="nav__link">Patient Login</a></li>
+                </ul>
+                <div class="nav__close" id="nav-close"><i class="ri-close-line"></i></div>
+            </div>
+
+            <div class="nav__btns">
+                <i class="ri-moon-line change-theme" id="theme-button"></i>
+                <div class="nav__toggle" id="nav-toggle"><i class="ri-menu-line"></i></div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main">
+        <!--==================== HOME ====================-->
+        <section class="home" id="home">
+            <div class="home__container container grid">
+                <img src="{% static 'img/doctor.png' %}" alt="" class="home__img" />
+                <div class="home__data">
+                    <h1 class="home__title">Doctors make <br> your life better</h1>
+                    <p class="home__description">Book consultations with expert doctors. Get trusted healthcare from the comfort of your home.</p>
+                    <a href="{% url 'patient_login' %}" class="button button--flex">Explore <i class="ri-arrow-right-down-line button__icon"></i></a>
+                </div>
+                <!-- <div class="home__social">
+                    <span class="home__social-follow">Follow Us</span>
+                    <div class="home__social-links">
+                        <a href="#" class="home__social-link"><i class="ri-facebook-fill"></i></a>
+                        <a href="#" class="home__social-link"><i class="ri-instagram-line"></i></a>
+                        <a href="#" class="home__social-link"><i class="ri-twitter-fill"></i></a>
+                    </div>
+                </div> -->
+            </div>
+        </section>
+
+        <!--==================== ABOUT ====================-->
+        <section class="about section container" id="about">
+            <div class="about__container grid">
+                <img src="{% static 'img/doc1.png' %}" alt="" class="about__img" />
+                <div class="about__data">
+                    <h2 class="section__title about__title">Who we are & <br> why choose us</h2>
+                    <p class="about__description">
+                        Trusted by thousands of patients. Our platform connects you with certified healthcare professionals 24/7.
+                    </p>
+                    <div class="about__details">
+                        <p class="about__details-description"><i class="ri-checkbox-fill about__details-icon"></i> Certified & experienced doctors</p>
+                        <p class="about__details-description"><i class="ri-checkbox-fill about__details-icon"></i> Easy appointment booking</p>
+                        <p class="about__details-description"><i class="ri-checkbox-fill about__details-icon"></i> Online and offline consultations</p>
+                        <p class="about__details-description"><i class="ri-checkbox-fill about__details-icon"></i> 100% privacy guaranteed</p>
+                    </div>
+                    <a href="services" class="button--link button--flex">Book Now <i class="ri-arrow-right-down-line button__icon"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!--==================== STEPS ====================-->
+    <section class="steps section container">
+  <div class="steps__bg">
+    <h2 class="section__title-center steps__title">How to Book an Appointment</h2>
+    
+    <div class="steps__container grid">
+      
+      <div class="steps__card">
+        <div class="steps__card-number">01</div>
+        <h3 class="steps__card-title">Pick a Date</h3>
+        <p class="steps__card-description">
+          Browse the weekly calendar and select your preferred appointment date.
+        </p>
+      </div>
+
+      <div class="steps__card">
+        <div class="steps__card-number">02</div>
+        <h3 class="steps__card-title">Choose a Time Slot</h3>
+        <p class="steps__card-description">
+          Pick a convenient time slot based on your availability.
+        </p>
+      </div>
+
+      <div class="steps__card">
+        <div class="steps__card-number">03</div>
+        <h3 class="steps__card-title">Select Department</h3>
+        <p class="steps__card-description">
+          Choose the relevant department like General, ENT, or Pediatrics for your concern.
+        </p>
+      </div>
+
+      <div class="steps__card">
+        <div class="steps__card-number">04</div>
+        <h3 class="steps__card-title">Auto Doctor Assignment</h3>
+        <p class="steps__card-description">
+          A qualified doctor from the chosen department will be automatically assigned.
+        </p>
+      </div>
+
+      <div class="steps__card">
+        <div class="steps__card-number">05</div>
+        <h3 class="steps__card-title">Fill Patient Details</h3>
+        <p class="steps__card-description">
+          Provide your personal and contact details, including symptoms if any.
+        </p>
+      </div>
+
+      <div class="steps__card">
+        <div class="steps__card-number">06</div>
+        <h3 class="steps__card-title">Get Confirmation</h3>
+        <p class="steps__card-description">
+          Receive an instant confirmation along with your appointment letter.
+        </p>
+      </div>
+      
+    </div>
+  </div>
+</section>
+
+
+        <!--==================== SERVICES ====================-->
+        <section class="product section container" id="services">
+            <h2 class="section__title-center">Our Medical Services</h2>
+            <p class="product__description">We offer a variety of healthcare services to meet your needs.</p>
+            <div class="product__container grid">
+                <article class="product__card">
+                    <img src="{% static 'img/cardiologist.png' %}" alt="" class="product__img" />
+                    <h3 class="product__title">Cardiology</h3>
+                    <button class="button--flex product__button"><i class="ri-stethoscope-line"></i></button>
+                </article>
+                <article class="product__card">
+                    <img src="{% static 'img/dermatology.png' %}" alt="" class="product__img" />
+                    <h3 class="product__title">Dermatology</h3>
+                    <button class="button--flex product__button"><i class="ri-stethoscope-line"></i></button>
+                </article>
+                <article class="product__card">
+                    <img src="{% static 'img/gynecology.png' %}" alt="" class="product__img" />
+                    <h3 class="product__title">Gynecology</h3>
+                    <button class="button--flex product__button"><i class="ri-stethoscope-line"></i></button>
+                </article>
+                <article class="product__card">
+                    <img src="{% static 'img/general.png' %}" alt="" class="product__img" />
+                    <h3 class="product__title">General Physician</h3>
+                    <button class="button--flex product__button"><i class="ri-stethoscope-line"></i></button>
+                </article>
+            </div>
+        </section>
+
+        <!--==================== FAQ ====================-->
+        <section class="questions section" id="faqs">
+            <h2 class="section__title-center questions__title container">Frequently Asked Questions</h2>
+            <div class="questions__container container grid">
+                <div class="questions__group">
+                    <div class="questions__item">
+                        <header class="questions__header"><i class="ri-add-line questions__icon"></i><h3 class="questions__item-title">How do I book an appointment?</h3></header>
+                        <div class="questions__content"><p class="questions__description">Choose a doctor, select a time slot, and confirm your booking online.</p></div>
+                    </div>
+                    <div class="questions__item">
+                        <header class="questions__header"><i class="ri-add-line questions__icon"></i><h3 class="questions__item-title">Are consultations available 24/7?</h3></header>
+                        <div class="questions__content"><p class="questions__description">Yes, we have doctors available round the clock for virtual consultations.</p></div>
+                    </div>
+                </div>
+                <div class="questions__group">
+                    <div class="questions__item">
+                        <header class="questions__header"><i class="ri-add-line questions__icon"></i><h3 class="questions__item-title">Can I reschedule my appointment?</h3></header>
+                        <div class="questions__content"><p class="questions__description">No. You cannot reschedule your bookings. Instead don't attend for apppointment</p></div>
+                    </div>
+                    <div class="questions__item">
+                        <header class="questions__header"><i class="ri-add-line questions__icon"></i><h3 class="questions__item-title">Do I need a prescription?</h3></header>
+                        <div class="questions__content"><p class="questions__description">Prescriptions are provided by the doctor after consultation if required.</p></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--==================== CONTACT ====================-->
+        <section class="contact section container" id="contact">
+            <div class="contact__container grid">
+                <div class="contact__box">
+                    <h2 class="section__title">Need Help? <br> Reach Out to Us</h2>
+                    <div class="contact__data">
+                        <div class="contact__information">
+                            <h3 class="contact__subtitle">Call Support</h3>
+                            <span class="contact__description"><i class="ri-phone-line contact__icon"></i> +91 0000000000</span>
+                        </div>
+                        <div class="contact__information">
+                            <h3 class="contact__subtitle">Mail Support</h3>
+                            <span class="contact__description"><i class="ri-mail-line contact__icon"></i> support@medicare.com</span>
+                        </div>
+                    </div>
+                </div>
+
+                <form action="" class="contact__form">
+                    <div class="contact__inputs">
+                        <div class="contact__content">
+                            <input type="email" placeholder=" " class="contact__input" />
+                            <label for="" class="contact__label">Email</label>
+                        </div>
+                        <div class="contact__content">
+                            <input type="text" placeholder=" " class="contact__input" />
+                            <label for="" class="contact__label">Subject</label>
+                        </div>
+                        <div class="contact__content contact__area">
+                            <textarea name="message" placeholder=" " class="contact__input"></textarea>
+                            <label for="" class="contact__label">Message</label>
+                        </div>
+                    </div>
+                    <button class="button button--flex">Send Message <i class="ri-arrow-right-up-line button__icon"></i></button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <a href="#" class="scrollup" id="scroll-up"><i class="ri-arrow-up-fill scrollup__icon"></i></a>
+    <script src="{% static 'js/scrollreveal.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

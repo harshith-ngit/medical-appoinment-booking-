@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Profile</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+  <link rel="shortcut icon" href="{% static 'img/medical-icon.png' %}" type="image/x-icon" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet" />
+  <style>
+    .form__group {
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .form__label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--title-color);
+    }
+    .button--alt {
+      background-color: var(--container-color);
+      color: var(--text-color);
+      border: 1px solid var(--text-color);
+      transition: background-color 0.3s ease;
+    }
+    .button--alt:hover {
+      background-color: var(--first-color);
+      color: var(--body-color);
+    }
+    .section.container {
+      max-width: 600px;
+      padding: 2rem;
+      background-color: var(--container-color);
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .section__title-center {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--title-color);
+      text-align: center;
+    }
+  </style>
+</head>
+<body id="body">
+  <header class="header" id="header">
+    <nav class="nav container">
+      <a href="{% url 'patient_dashboard' %}" class="nav__logo">
+        <i class="ri-stethoscope-line nav__logo-icon"></i> MediCare
+      </a>
+      <div class="nav__btns">
+        <i class="ri-moon-line change-theme" id="theme-button"></i>
+      </div>
+    </nav>
+  </header>
+
+  <main class="section container" style="margin-top: 6rem;">
+    <h2 class="section__title-center">👤 Edit Your Profile</h2>
+
+    {% if messages %}
+      {% for message in messages %}
+        <p style="color: green; text-align: center;">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="form__group">
+        <label class="form__label">Username (Read-only)</label>
+        <input type="text" value="{{ request.user.username }}" readonly class="input" />
+      </div>
+      <div class="form__group">
+        <label class="form__label">Email (Read-only)</label>
+        <input type="email" value="{{ request.user.email }}" readonly class="input" />
+      </div>
+      <div class="form__group">
+        <label class="form__label">Contact Number</label>
+        <input type="text" name="contact_number" value="{{ profile.contact_number }}" class="input" required />
+      </div>
+      <div class="form__group">
+        <label class="form__label">New Password</label>
+        <input type="password" name="new_password" class="input" placeholder="Enter new password" />
+      </div>
+
+      <div class="form__group">
+        <label class="form__label">Confirm New Password</label>
+        <input type="password" name="confirm_password" class="input" placeholder="Confirm new password" />
+      </div>
+
+      <div class="form__group">
+        <label class="form__label">Age</label>
+        <input type="number" name="age" value="{{ profile.age }}" class="input" required />
+      </div>
+      <div class="form__group" style="display: flex; gap: 1rem; justify-content: center;">
+        <button type="submit" class="button">📂 Save Changes</button>
+        <a href="{% url 'patient_dashboard' %}" class="button button--alt">⬅ Back</a>
+      </div>
+    </form>
+  </main>
+
+  <footer class="footer section">
+    <div class="footer__container container">
+      <p class="footer__copy">© 2025 MediCare. All rights reserved.</p>
+    </div>
+  </footer>
+  <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

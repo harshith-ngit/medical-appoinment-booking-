@@ -1,0 +1,245 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard: {{ user.username }}</title>
+
+  <link rel="shortcut icon" href="{% static 'img/medical-icon.png' %}" type="image/x-icon" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+  <style>
+    .dashboard__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .dashboard__card {
+      background-color: var(--container-color);
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: var(--box-shadow);
+      position: relative;
+    }
+
+    .dashboard__buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .dashboard__buttons a {
+      background-color: var(--first-color);
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .dashboard__buttons a:hover {
+      background-color: var(--first-color-alt);
+    }
+
+    .appointment-card {
+      background-color: var(--body-color);
+      border: 1px solid var(--border-color);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      box-shadow: var(--box-shadow);
+      width: 100%;
+    }
+
+    .scrollup {
+      position: fixed;
+      right: 1.5rem;
+      bottom: 2rem;
+      background-color: var(--first-color);
+      color: #fff;
+      padding: 0.75rem;
+      border-radius: 50%;
+      font-size: 1.25rem;
+      cursor: pointer;
+    }
+
+    .heading {
+      font-family: 'Times New Roman', Times, serif;
+    }
+
+    .quote {
+      font-style: italic;
+      color: var(--first-color);
+      border-left: 4px solid var(--first-color);
+      padding-left: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <!--=============== HEADER ===============-->
+  <header class="header" id="header">
+    <nav class="nav container">
+      <a href="#" class="nav__logo">
+        <i class="ri-hospital-line nav__logo-icon"></i> MediCare
+      </a>
+      <div class="nav__menu" id="nav-menu">
+        <div class="nav__close" id="nav-close"><i class="ri-close-line"></i></div>
+      </div>
+      <div class="nav__btns">
+        <i class="ri-moon-line change-theme" id="theme-button"></i>
+        <div class="nav__toggle" id="nav-toggle"><i class="ri-menu-line"></i></div>
+      </div>
+    </nav>
+  </header>
+
+  <!--=============== DASHBOARD SECTION ===============-->
+  <main class="section container">
+    <h2 class="section__title-center heading">Welcome, {{ user.username }}</h2>
+
+    {% if messages %}
+    <div id="message-container" style="text-align:center; margin-top: 1rem;">
+      {% for message in messages %}
+        <p class="message-text" style="color: red;">{{ message }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Buttons -->
+    <div class="dashboard__buttons">
+      <a style="font-size: 13.8px;" href="{% url 'book_appointment' %}">📅 Book Appointment</a>
+      <a style="font-size: 13.8px;" href="{% url 'your_appointments_view' %}">🕒 Your Appointments</a>
+      <a style="font-size: 13.8px;" href="{% url 'doctor_schedule' %}">🗓️ Doctor Schedule</a>
+      <a style="font-size: 13.8px;" href="{% url 'profile_view_edit' %}">👤 View/Edit Profile</a>
+      <a style="font-size: 13.8px;" href="{% url 'logout' %}">🚪 Logout</a>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="dashboard__grid">
+  
+
+      <!-- Finished Appointments -->
+<div class="dashboard__card">
+  <h3 style="padding-bottom: 10px;">✅ Past Appointments</h3>
+  {% if completed_appointments %}
+    <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+      {% for appointment in completed_appointments %}
+        <div class="appointment-card">
+          <p><strong>{{ appointment.date }} at {{ appointment.time }}</strong></p>
+          <p>👤 {{ appointment.full_name }}</p>
+          <p>📞 {{ appointment.contact }}</p>
+          <p>👩‍⚕️ {{ appointment.department }}</p>
+          <p style="color: green;">Status: Completed</p>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No past appointments found.</p>
+  {% endif %}
+</div>
+
+
+      <!-- Your Appointments -->
+      <div class="dashboard__card">
+        <h3 style="padding-bottom: 10px;">📅 Your Upcoming Appointments</h3>
+        {% if appointments %}
+          <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+            {% for appointment in appointments %}
+              <div class="appointment-card">
+                <p><strong>{{ appointment.date }} at {{ appointment.time }}</strong></p>
+                <p>👤 {{ appointment.full_name }}</p>
+                <p>📞 {{ appointment.contact }}</p>
+                <p>👩‍⚕️ {{ appointment.department }}</p>
+              </div>
+            {% endfor %}
+            <a href="{% url 'your_appointments_view' %}" style="margin-top: 1rem; text-align:center; color: var(--first-color); text-decoration: underline;">🔍 View All</a>
+          </div>
+        {% else %}
+          <p>No appointments found.</p>
+        {% endif %}
+      </div>
+
+          <!-- Appointment Summary -->
+      <div class="dashboard__card">
+        <h3 style="padding-bottom: 10px;">📊 Appointment Summary</h3>
+        <p><strong>Upcoming:</strong> {{ upcoming_count }}</p>
+        <p><strong>Completed:</strong> {{ completed_count }}</p>
+      </div>
+
+      <!-- Doctor Availability -->
+      <div class="dashboard__card">
+        <h3 style="padding-bottom: 10px;">👨‍⚕️ Doctors Availability</h3>
+        <p>Mon–Sat: 9:00 AM – 6:00 PM</p>
+        <p style="color: red;"><strong>Sunday: Closed</strong></p>
+      </div>
+
+ 
+
+      <!-- Health Records
+      <div class="dashboard__card">
+        <h3>📂 Health Records</h3>
+        <p>No reports uploaded yet.</p>
+        <a href="#" class="button">Upload Records</a>
+      </div> -->
+
+      <!-- Quick Actions
+      <div class="dashboard__card">
+        <h3>⚡ Quick Actions</h3>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+          <a href="{% url 'book_appointment' %}" class="button">➕ New Appointment</a>
+          <a href="{% url 'profile_view_edit' %}" class="button">✏️ Edit Profile</a>
+          <a href="{% url 'logout' %}" class="button">🚪 Logout</a>
+        </div>
+      </div> -->
+
+      <!-- Health Tips -->
+      <div class="dashboard__card">
+        <h3 style="padding-bottom: 10px;">💡 Health Tips</h3>
+        <ul>
+          <li>Drink at least 8 glasses of water daily 💧</li>
+          <li>30 mins of physical activity 🏃</li>
+          <li>Eat fruits & veggies 🥦</li>
+          <li>Sleep for 7–8 hours 🛌</li>
+        </ul>
+      </div>
+
+      <!-- Motivational Quote -->
+      <div class="dashboard__card">
+        <h3 style="padding-bottom: 10px;">💬 Daily Quote</h3>
+        <p class="quote">"Your health is your wealth — take care of it today for a better tomorrow."</p>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Scroll Up -->
+  <a href="#" class="scrollup" id="scroll-up">
+    <i class="ri-arrow-up-line scrollup__icon"></i>
+  </a>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/scrollreveal"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+  <script>
+    setTimeout(function () {
+      const messageContainer = document.getElementById('message-container');
+      if (messageContainer) {
+        messageContainer.style.display = 'none';
+      }
+    }, 4000);
+
+    ScrollReveal().reveal('.dashboard__card', {
+      interval: 100,
+      origin: 'bottom',
+      distance: '40px',
+      duration: 800,
+      reset: false
+    });
+  </script>
+</body>
+</html>

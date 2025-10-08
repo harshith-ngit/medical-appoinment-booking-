@@ -1,0 +1,209 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <title>Appointment Letter</title>
+  <link rel="shortcut icon" href="{% static 'img/medical-icon.png' %}" />
+  <style>
+    :root {
+      --first-color: #2ecc71;
+      --body-color: #ffffff;
+      --text-color: #222;
+      --container-color: #f4fef7;
+      --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    [data-theme="dark"] {
+      --body-color: #1c1c1c;
+      --text-color: #f0f0f0;
+      --container-color: #262f26;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--body-color);
+      font-family: "Segoe UI", sans-serif;
+      color: var(--text-color);
+    }
+
+    #pdf-content {
+      width: 210mm;
+      min-height: 297mm;
+      margin: auto;
+      padding: 30mm 20mm;
+      background-color: var(--container-color);
+      box-shadow: var(--box-shadow);
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
+    .letter-header,
+    .letter-footer {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .letter-header h2 {
+      color: var(--first-color);
+      font-size: 1.8rem;
+    }
+
+    .letter-body {
+      line-height: 1.7;
+      font-size: 1rem;
+    }
+
+    .letter-body ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .letter-body ul li {
+      margin: 0.5rem 0;
+    }
+
+    .qr-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+
+    .btn-group,
+    .bottom-nav,
+    .theme-toggle {
+      display: flex;
+      justify-content: center;
+      margin-top: 2rem;
+      gap: 1rem;
+    }
+
+    .btn-group button,
+    .bottom-nav a {
+      background-color: var(--first-color);
+      color: white;
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .btn-group button:hover,
+    .bottom-nav a:hover {
+      background-color: #27ae60;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: transparent;
+      font-size: 1.3rem;
+      border: none;
+      z-index: 999;
+    }
+
+    @media print {
+      .btn-group,
+      .bottom-nav,
+      .theme-toggle {
+        display: none !important;
+      }
+
+      #pdf-content {
+        width: auto;
+        min-height: auto;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+        border-radius: 0;
+      }
+
+      body {
+        background: white;
+      }
+    }
+  </style>
+</head>
+<body>
+  </header>
+
+  <!-- Theme toggle (won't print) -->
+  <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+
+  <!-- Main export area -->
+  <div id="pdf-content">
+    <div class="letter-header">
+      <h2>Appointment Confirmation Letter</h2>
+      <p><i class="ri-hospital-line"></i> MediCare Hospital</p>
+    </div>
+
+    <div class="letter-body">
+      <p>Dear {{ appointment.full_name }},</p>
+      <p>Your appointment has been successfully scheduled. Please find the details below:</p>
+
+      <ul>
+        <li><strong>📅 Date:</strong> {{ appointment.date }}</li>
+        <li><strong>⏰ Time:</strong> {{ appointment.time|time:"h:i A" }}</li>
+        <li><strong>🏥 Department:</strong> {{ appointment.department }}</li>
+        <li><strong>📧 Email:</strong> {{ appointment.email }}</li>
+        <li><strong>📞 Contact:</strong> {{ appointment.contact }}</li>
+        <li><strong>📝 Symptoms:</strong> {{ appointment.symptoms }}</li>
+      </ul>
+
+      <p>✅ Please arrive at the hospital 15 minutes early. For any assistance, call us at +91-999999999.</p>
+
+      <div class="qr-container">
+        <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" width="150" height="150" />
+      </div>
+    </div>
+
+    <div class="letter-footer">
+      <p>Warm Regards,<br><strong>MediCare Hospital</strong></p>
+      <p style="margin-top: 1rem;">
+        📍 <strong>Address:</strong><br>
+        MediCare Multispeciality Hospital,<br>
+        Plot No. 45, Jubilee Hills, Road No. 36,<br>
+        Hyderabad - 500033, Telangana, India<br>
+        ☎️ +91-98765-43210
+      </p>
+    </div>
+  </div>
+
+  <!-- UI controls (not in PDF) -->
+  <div class="btn-group">
+    <button onclick="window.print()">🖨️ Print</button>
+    <button onclick="downloadPDF()">📥 Download as PDF</button>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="{% url 'patient_dashboard' %}">⬅ Back to Dashboard</a>
+  </div>
+
+  <!-- PDF library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script>
+    function downloadPDF() {
+      const element = document.getElementById('pdf-content');
+      const opt = {
+        margin: 0,
+        filename: '{{ appointment.full_name }}.pdf',
+        image: { type: 'jpeg', quality: 100 },
+        html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(element).save();
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+    }
+  </script>
+</body>
+</html>
